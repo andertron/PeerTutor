@@ -1,0 +1,48 @@
+---------------
+----TO LIST----
+---------------
+
+Admin Stuff:
+
+[High]Allow admin to edit tutor clock in/out times. [Jerry]
+
+[High]Make a tutor -Add tutor(function)[] [Jerry]
+
+[High]Admin Control Panel[] [Jerry]
+
+[High]Admin Header[] [Jerry]
+
+[Medium] Tutoring status(if tutoring sessions are cancelled)[] [Jerry]
+
+
+
+Tutor Stuff:
+
+[High] Finish clock in/out page [Zach]
+
+[Add if we have time] Add description to the student clock in/out page[].
+
+[Add if we have time] Add view past tutee in tutor control panel[].
+
+[Add if have time] view past tutoring times in tutor control panel[].
+
+
+Database stuff:
+[Add if we have time] Add 'description' column to the tblStudentClock to say which class they were being tutored in[].
+
+
+
+Misc:
+[High]Student cant go into admin page[] [Deeana/Josh]
+
+[High]Tutor cant go into admin page[] [Deeana/Josh]
+
+[High] Admin cant go into tutor pages[] [Deeana/Josh]
+
+[Add if we have time] Privacy Page[]
+
+[Add if we have time] Contact Page[]
+
+[High]more and more validation[] [Deeana/Josh]
+
+[HIGH must do!]Make sure josh didnt break the program [] [Deeana].
