@@ -1,5 +1,6 @@
 <?php
-    include 'includes/_header.php';
+     include 'includes/_header.php';   
+    
 ?>
                 <div class="slider-fixed-container">
                     <div class="slider-fixed-frame">

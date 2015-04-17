@@ -1,9 +1,14 @@
-<?php session_start(); 
+<?php 
+session_start(); 
 include( "../DataUtil/common.inc.php"); 
-include( "../DataUtil/DataAccess.inc.php"); //
+include( "../DataUtil/DataAccess.inc.php");
 
-if($_SESSION[ 'screenName']){ 
-include '../includes/adminHeader.php';
+$roleID = $_SESSION['role'];
+
+var_dump($roleID);
+
+if($_SESSION[ 'screenName'] && $roleID == "Admin"){ 
+include '../includes/_header.php';
 $da=new DataAccess($link);
 
 // Gets list of tutors
@@ -16,6 +21,8 @@ if(isset($_GET['TutorID'])){
 $tutorID = $_GET['TutorID'];
 //Grab tutor info by ID
 $tutorByID=$da->get_tutor_by_id($tutorID);
+//Grab tutor clock
+$tutorClockByID= $da-> get_tutor_clock($tutorID);
 
 
 var_dump($tutorByID);
@@ -158,18 +165,42 @@ $searchCategories=$da->get_categories_by_categoryName($searchCategory);
             </div>
             <div id="tab3">
         <?php
-                if(isset($_GET['category_id'])){
-                    
-        ?>
-        Category Name: 
-                <form method= "POST" action="">
-                <input type="text" style="width:750px" name="category_name" value="<?php echo $categoryName['category_name'] ?>" required><br>
-                <?php 
-                echo $errorMessage?>
-                <br>
-
-                <input type="submit" name="btnSubmitEdit" value="Submit">
-                </form>
+                if(isset($_GET['TutorID'])){
+                    ?>
+       <table class = "table">
+                    <thead>
+                        <th>Date</th>
+                        <th>Tutor In</th>
+                        <th>Tutor out</th>
+                        <th>Time Worked</th>
+                      
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        
+                        foreach($tutorClockByID as $clockByID){ 
+                            $date = strtotime($clockByID['tutorClockIn']);
+                            $printDate = date("m/d/y", $date);
+                            $intime = strtotime($clockByID['tutorClockIn']);
+				            $printInTime = date("g:i:a", $intime);
+				            $outTime = strtotime($clockByID['tutorClockOut']);
+				            $printOutTime = date("g:i:a", $outTime);
+				            
+				            $hoursWorked = ((strtotime($printOutTime) - strtotime($printInTime)) /3600);
+                        echo("<tr>"); 
+                        echo("<td>$printDate</td>");
+                        echo("<td>$printInTime</td>");
+                        echo("<td>$printOutTime</td>");
+                        echo("<td>$hoursWorked");
+                   
+                        echo("<td><a href=\"adminControlPanel.php?TutorID={$getTutors['TutorID']}#tab2\">Select</a>"); 
+                        echo( "</tr>"); 
+                        } 
+                        ?>
+                    </tbody>
+                </table>
+                
         <?php
       echo $_GET['category_id'];
 
@@ -215,9 +246,11 @@ $searchCategories=$da->get_categories_by_categoryName($searchCategory);
     </div>
 
     <?php 
-    }else
-    { 
+    }else{
     include '../includes/_header.php'; 
-    echo "you are not an admin"; } 
+    echo "<center><h1>You are not an admin</h1></center>";
+    echo "<center><a href=\"../index.php\">Return Home</a></center>";
+    }
+    
     include '../includes/_footer.php'; 
     ?>

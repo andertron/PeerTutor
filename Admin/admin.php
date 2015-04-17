@@ -13,7 +13,7 @@ if($_SESSION['screenName']){
     include('../includes/_adminHeader.php');
     ?>
    
-   <?php echo"you logged in " . $_SESSION['screenName'] . " " . " NICE!!! <br><a href='logout.php'>Log out!</a>" ?>
+   <?php echo"you logged in " . $_SESSION['screenName'] .   " " .  $_SESSION['type']. " NICE!!! <br><a href='logout.php'>Log out!</a>" ?>
 <?php
 }else{
     include('../includes/_header.php');

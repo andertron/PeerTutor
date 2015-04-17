@@ -1,11 +1,20 @@
 <?php
-include '../includes/tutorHeader.php';
+
 include( "../DataUtil/common.inc.php");
 include '../DataUtil/DataAccess.inc.php';
 
+$roleID = $_SESSION['type'];
+var_dump($roleID);
+$roleID = $_SESSION['role'];
+
+var_dump($roleID);
+
+if($_SESSION[ 'screenName'] && $roleID == "Tutor"){ 
+include '../includes/_header.php';
 
 $da = new DataAccess($link);
 $punchTable=$da->get_punch_table();
+$tutorPunchTable=$da->get_tutor_table();
 $tutorID = $_SESSION['tutorID'];
 
 
@@ -19,21 +28,25 @@ $tut_time_in = "";
 $tut_time_out = "";
 
 if(isset($_POST['btnTutClockIn'])){
+$tut_time_in = date('Y-m-d H:i:s');
 
-     
-    $tut_error_messages = array();
+$da->insert_tutor_punch_data($tutorID, $tut_time_in);     
+    ?>
+     <meta http-equiv="refresh" content="0">
+     <?php
     
-    if(isset($_POST['tutorID'])){
-        if(empty($_POST['tutorID'])){
-            $tut_error_messages['tutorID'] = "Tutor ID is a required field";
-        }else{
-        $time_in = date('Y-m-d H:i:s');
-        }
-    }
+
 }
 if(isset($_POST['btnTutClockOut'])){
-    $time_in = $_POST['tutClockIn'];
-     $time_out = date('Y-m-d H:i:s');  
+    
+     $tut_time_out = date('Y-m-d H:i:s');  
+    $da->update_tutor_punch_data($tut_time_out, $tutorID);
+    ?>
+     <meta http-equiv="refresh" content="0">
+     <?php
+    
+    var_dump($tut_time_out, $tutorID);
+   
 }
 
 
@@ -63,7 +76,7 @@ $error_messages = array();
      
       
   if(empty($error_messages)){
-    $da->insert_punch_table_data($studID, $studFirstName, $studLastName, $time_in);
+    $da->insert_punch_table_data($studID, $studFirstName, $studLastName, $time_in, $tutorID);
     ?>
      <meta http-equiv="refresh" content="0">
      <?php
@@ -88,8 +101,10 @@ $error_messages = array();
   if(empty($error_messages)){
      
     $da->update_punch_table_data($time_out, $studID);
+    ?>
+     <meta http-equiv="refresh" content="0">
+     <?php
 
-    var_dump($studID, $time_out);
     
   }
 }
@@ -174,14 +189,25 @@ $error_messages = array();
                                 <tbody>
                                     <tr>
                                     <td><input type="text" name="tutorID"/ readonly value="<?php echo ($tutorID) ?>"/></td>
-                                    <td><input type = "submit" name = "btnTutClockIn" value = "Clock In"><input type="text" name="tutClockIn "value = "<?php echo ($time_in)?>" /></td>
-                                    <td><input type = "submit" name = "btnTutClockOut" value="Clock Out"><input type="text"  value = "<?php echo ($time_out)?>"/></td>
+                                    <td><input type = "submit" name = "btnTutClockIn" value = "Clock In"></td>
+                                    <td><input type = "submit" name = "btnTutClockOut" value="Clock Out"></td>
                                     </tr>
+                                    </form>
                                     <?php
-              
+                                    foreach($tutorPunchTable as $tutPunch){
+                                        echo("<tr>");
+                                        echo("<td></td>");
+                                        echo("<td>{$tutPunch['tutorClockIn']}</td>");
+                                         if($tutPunch['tutorClockOut'] != null){
+                                        echo("<td>{$tutPunch['tutorClockOut']}</td>");
+                                        }else{
+                                        echo("<td></td>");
+                                        }
+                                        echo("</tr>");
+                                    }
                                     ?>
                                 </tbody>
-                                </form>
+                                
                               </Table>   
                             
                  
@@ -212,11 +238,12 @@ $error_messages = array();
                                             echo("<td>{$punch['studFirstName']}</td>");
                                             echo("<td>{$punch['studLastName']}</td>");
                                             echo("<td>{$punch['studClockIn']}</td>");
-                                            if(!$punch['studClockOut'] = null){
-                                            echo("<td>{$punch['studClockOut']}</td>");
-                                                
+                                            if($punch['studClockOut'] != null){
+                                                echo("<td>{$punch['studClockOut']}</td>");
+                                            }else{
+                                                echo("<td></td>");
                                             }
-                                            echo("</tr>");
+                                             echo("</tr>");
                                         }
                                     ?>
                                 </tbody>
@@ -232,5 +259,12 @@ $error_messages = array();
             
 <?php
 unset($_SESSION['myusername']);
-include '../includes/_footer.php';
+}else{
+    include '../includes/_header.php';
+   
+    echo "<center><h1>You are not a tutor</h1></center>";
+    echo "<center><a href=\"../index.php\">Return Home</a></center>";
+    }
+    
+    include '../includes/_footer.php'; 
 ?>

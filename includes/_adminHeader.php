@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <!--[if lt IE 7]>
 <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -43,7 +45,7 @@
         <link href='/css/style.css' rel='stylesheet' type='text/css'> 
         <link href='/css/responsive.css' rel='stylesheet' type='text/css'>
 
-        <link href="/css/skins/bright-green.css" rel='stylesheet' type='text/css' id="skin-file">
+        <link href="/css/skins/black.css" rel='stylesheet' type='text/css' id="skin-file">
 
 
 
@@ -66,64 +68,18 @@
         <div id="wrapper" class="boxed" >
 
             <div class="top_wrapper">
-                <div class="top-bar">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-7">
-                                <div class="call-us top-bar-block">
-                                   Welcome: <?php echo $_SESSION['screenName'] ?>
-                                </div>
-                                <div class="mail-us top-bar-block">
-                                                          
-                                </div>
-
-                            </div>
-                            <div class="col-sm-5">
-
-                                <!-- Search Box -->
-                                <div class="searchbox">
-                                    <form action="#" method="get">
-                                        <input type="text" class="searchbox-inputtext" id="searchbox-inputtext" name="s" placeholder="Search.."/>
-                                        <label class="searchbox-icon" for="searchbox-inputtext"></label>
-                                        <input type="submit" class="searchbox-submit" value="Search"/>
-                                    </form>
-                                </div>
-                                <!-- //Search Box// -->
-                                <div class="social-icons">
-                                    <ul>
-                                        <li>
-                                            <a href="#" target="_blank" class="social-media-icon facebook-icon" data-original-title="facebook">facebook</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" target="_blank" class="social-media-icon twitter-icon" data-original-title="twitter">twitter</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" target="_blank" class="social-media-icon googleplus-icon" data-original-title="googleplus">googleplus</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" target="_blank" class="social-media-icon pininterest-icon" data-original-title="pininterest">pininterest</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" target="_blank" class="social-media-icon dribble-icon" data-original-title="dribble">dribble</a>
-                                        </li>
-                                    </ul>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+           
 
                 <!-- Header -->
-                <header id="header">
+                <header style="background-color:black; id="header">
                     <div class="container">
 
                         <div class="row header">
 
                             <!-- Logo -->
                             <div class="col-xs-2 logo">
-                                <a href="home-version1.html">
-                                    <img src="/images/discover.png" alt="Discover Anime"  />
+                                <a href="../index.php">
+                                    <img src="/images/CaptureWesternLogo.png" alt="WWTC"  />
                                 </a>
                             </div>
                             <!-- //Logo// -->
@@ -137,84 +93,50 @@
                                     <i class="fa fa-list-ul"></i>
                                 </div>
                                 <!-- //Mobile Button Menu// -->
-
-
-
-
                                 <nav>
                                     <ul class="navigation">
                                         <li>
-                                            <a href="home-version1.html">
+                                            <a href="../index.php">
                                                 <span class="label-nav">
                                                     Home
                                                 </span>
-                                                <span class="label-nav-sub" data-hover="Examples">
+                                                <span class="label-nav-sub" data-hover="Home">
                                                     Home
                                                 </span>
                                             </a>
                                           
                                         </li>
-                                       <li>
-                                            <a href="blog.html">
-                                                <span class="label-nav">
-                                                    Blog
-                                                </span>
-                                                <span class="label-nav-sub" data-hover="The News">
-                                                    Blog
-                                                </span>
-                                            </a>
-                                            <ul>
-                                                <li>
-                                                    <a href="blog.html">Blog</a>
-                                                </li>
-                                                <li>
-                                                    <a href="blog-masonry.html">Blog Masonry</a>
-                                                </li>
-                                                <li>
-                                                    <a href="blog-single.html">Blog Single</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                             <a href="/Admin/Category/category-list.php">
-                                                <span class="label-nav">
-                                                    Admin Utilities
-                                                </span>
-                                                <span class="label-nav-sub" data-hover="Add/Change">
-                                                    Admin Utilities
-                                                </span>
-                                            </a> 
-                                            <ul>
-                                                <li>
-                                                    <a href="/Admin/Category/category-list.php">Category</a>
-                                                </li>
-                                                <li>
-                                                    <a href="/Admin/Images/image-list.php">Images</a>
-                                                </li>
-                                                <li>
-                                                    <a href="/Admin/Posts/post-list.php">Posts</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        
+
                                       
-                                        <li>
-                                            <a href="elements.html">
+                                       <li>
+                                            <a href="../Public/search.php">
                                                 <span class="label-nav">
-                                                    About Us
+                                                    Search
                                                 </span>
-                                                <span class="label-nav-sub" data-hover="Elements">
-                                                    Elements
+                                                <span class="label-nav-sub" data-hover="Search here">
+                                                   Tutor/Class
                                                 </span>
                                             </a>
                                             
                                         </li>
                                         <li>
-                                            <a href="/Admin/logout.php">
+                                            <a href="/Admin/adminControlPanel.php">
+                                                <span class="label-nav">
+                                                    Admin Control Panel
+                                                </span>
+                                                <span class="label-nav-sub" data-hover="Admin Control Panel">
+                                                   Admin Control Panel
+                                                </span>
+                                            </a>
+                                            
+                                        </li>
+
+                                        <li>
+                                            <a href="../Admin/logout.php">
                                                 <span class="label-nav">
                                                     Log Out
                                                 </span>
-                                                <span class="label-nav-sub" data-hover="Log Out">
+                                                <span class="label-nav-sub" data-hover="Log OUt">
                                                     Log Out
                                                 </span>
                                             </a>

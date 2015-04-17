@@ -1,4 +1,6 @@
-
+<?php
+session_start();
+?>
 
 <!DOCTYPE html>
 <!--[if lt IE 7]>
@@ -119,18 +121,78 @@
                                             </a>
                                             
                                         </li>
-
+                                        <?php
+                                        
+                                        if($_SESSION['screenName'] && $_SESSION['role'] == "Admin"){
+                                            
+                                        echo ('
                                         <li>
-                                            <a href="../Admin/login.php">
+                                            <a href="/Admin/adminControlPanel.php">
                                                 <span class="label-nav">
-                                                    Login
+                                                    Admin Control Panel
                                                 </span>
-                                                <span class="label-nav-sub" data-hover="Tutor/Admin Only">
-                                                    Login
+                                                <span class="label-nav-sub" data-hover="Admin Control Panel">
+                                                   Admin Control Panel
                                                 </span>
                                             </a>
                                             
-                                        </li>
+                                        </li>');
+                                
+                                        echo ('
+                                        <li>
+                                            <a href="../Admin/logout.php">
+                                                <span class="label-nav">
+                                                    Log Out
+                                                </span>
+                                                <span class="label-nav-sub" data-hover="Tutor/Admin Only">
+                                                    Log Out
+                                                </span>
+                                            </a>
+                                            
+                                        </li>');
+                                        }elseif($_SESSION['screenName'] && $_SESSION['role'] == "Tutor"){
+                                            echo ('
+                                        <li>
+                                            <a href="/Admin/tutorControl.php">
+                                                <span class="label-nav">
+                                                    Tutor Control Panel
+                                                </span>
+                                                <span class="label-nav-sub" data-hover="Tutor Control Panel">
+                                                   Tutor Control Panel
+                                                </span>
+                                            </a>
+                                            
+                                        </li>');
+                                
+                                        echo ('
+                                        <li>
+                                            <a href="../Admin/logout.php">
+                                                <span class="label-nav">
+                                                    Log Out
+                                                </span>
+                                                <span class="label-nav-sub" data-hover="Tutor/Admin Only">
+                                                    Log Out
+                                                </span>
+                                            </a>
+                                            
+                                        </li>');
+                                            
+                                        }else{
+                                            
+                                        echo(' 
+                                           <li>
+                                            <a href="../Admin/login.php">
+                                                <span class="label-nav">
+                                                    Log In
+                                                </span>
+                                                <span class="label-nav-sub" data-hover="Tutor/Admin Only">
+                                                    Log In
+                                                </span>
+                                            </a>
+                                            
+                                        </li>'); 
+                                        } 
+                                        ?>
                                        
                                     </ul>
 

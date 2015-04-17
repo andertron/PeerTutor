@@ -5,7 +5,7 @@ $username="kingjv"; // Mysql username
 $password=""; // Mysql password
 $db_name="TutoringDB"; // Database name
 $screenName = "";
-$type = 0;
+$type ="";
 
 $tbl_name="tblAdmins"; // Table name
 $tbl_name2="tblTutors"; // Table name
@@ -38,14 +38,16 @@ $result2=mysql_query($sql2);
 
 $count=mysql_num_rows($result);
 $count2=mysql_num_rows($result2);
-
+unset($_SESSION['type']);
 $validation = true;
-if($count==1){
+if($count == 1){
 
 while ($row = mysql_fetch_assoc($result)) {
 $screenName = $row['AdminFirstName'];
-$type = $row['RoleID'];
+$type = "Admin";
 
+$_role = "Admin";
+$_SESSION['role'] = $_role;
 $_SESSION['screenName'] = $screenName;  
 $_SESSION['type'] = $type;
 header("location:/Admin/adminControlPanel.php");
@@ -54,13 +56,15 @@ header("location:/Admin/adminControlPanel.php");
 $validation = true;
 }
  
-elseif($count2==1){
+elseif($count2 == 1){
 while ($row2 = mysql_fetch_assoc($result2)) {
 $screenName = $row2['TutorFirstName'];
 $tutorID = $row2['TutorID'];
-$type = $row['RoleID'];
+$_role = "Tutor";
+$type = "Tutor";
 
-$_SESSION['screenName'] = $screenName;  
+$_SESSION['screenName'] = $screenName; 
+$_SESSION['role'] = $_role;
 $_SESSION['type'] = $type;
 $_SESSION['tutorID'] = $tutorID;
 header("location:/Admin/tutorControl.php");

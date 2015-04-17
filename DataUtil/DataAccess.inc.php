@@ -216,6 +216,17 @@ class DataAccess{
 			return $posts;
 	}
 	
+	function get_tutor_clock($tutorID){
+		$qStr ="SELECT tutorClockIn, tutorClockOut FROM tblTutorClock WHERE TutorID = '$tutorID'";
+		$result = mysqli_query($this->link,$qStr) or $this->handle_error(mysqli_error($this->link));
+		$tutors = array();
+		while($row = mysqli_fetch_assoc($result)){
+			$tutors[] =$row;
+		}
+		
+		return $tutors;
+	}
+	
 	//get punch-in table array from database
 	function get_punch_table(){
 		$qStr ="SELECT * FROM tblStudentClock";
@@ -227,16 +238,27 @@ class DataAccess{
 		
 		return $punchTable;
 	}
+		//get Tutor punch-in table array from database
+	function get_tutor_table(){
+		$qStr ="SELECT * FROM tblTutorClock";
+		$result = mysqli_query($this->link,$qStr) or $this->handle_error(mysqli_error($this->link));
+		$tutorTable = array();
+		while($row = mysqli_fetch_assoc($result)){
+			$tutorTable[] =$row;
+		}
+		
+		return $tutorTable;
+	}
 	//insert for student punch-in table
-	function insert_punch_table_data($studID, $studFirstName, $studLastName, $studClockIn){
-	$qStr = "INSERT INTO tblStudentClock(studClockID, studFirstName, studLastName, studClockIn, studClockOut, TutorID) VALUES('$studID', '$studFirstName', '$studLastName', STR_TO_DATE( '$studClockIn', '%Y-%m-%d %H:%i:%s' ), '', 1)";
+	function insert_punch_table_data($studID, $studFirstName, $studLastName, $studClockIn, $tutorID){
+	$qStr = "INSERT INTO tblStudentClock(studClockID, studFirstName, studLastName, studClockIn, studClockOut, TutorID) VALUES('$studID', '$studFirstName', '$studLastName', STR_TO_DATE( '$studClockIn', '%Y-%m-%d %H:%i:%s' ), NULL, $tutorID)";
 	$result = mysqli_query($this->link, $qStr) or $this->handle_error(mysqli_error($this->link));
 	return $result;
 	}
 	
 	//update for student punch table
 	function update_punch_table_data($studClockOut, $studID){
-		$qStr = "UPDATE tblStudentClock SET studClockOut=STR_TO_DATE( '$studClockOut', '%m-%d-%Y %H:%i:%s' ) WHERE studClockID = $studID";
+		$qStr = "UPDATE tblStudentClock SET studClockOut='$studClockOut' WHERE studClockID=$studID";
 		$result = mysqli_query($this->link, $qStr) or $this->handle_error(mysqli_error($this->link));
 	if(!$result){
       	return false;
@@ -244,5 +266,24 @@ class DataAccess{
       $row = mysqli_fetch_assoc($result);
       return $result;
 	}
+	
+		//insert tutor punch tabe
+	function insert_tutor_punch_data($tutorID, $tutorClockIn){
+	$qStr = "INSERT INTO tblTutorClock(TutorID, tutorClockIn, tutorClockOut) VALUES('$tutorID', STR_TO_DATE( '$tutorClockIn', '%Y-%m-%d %H:%i:%s' ), NULL)";
+	$result = mysqli_query($this->link, $qStr) or $this->handle_error(mysqli_error($this->link));
+	return $result;
+	}
+	
+	//update for student punch table
+	function update_tutor_punch_data($tutorClockOut, $tutorID){
+		$qStr = "UPDATE tblTutorClock SET tutorClockOut='$tutorClockOut' WHERE TutorID=$tutorID";
+		$result = mysqli_query($this->link, $qStr) or $this->handle_error(mysqli_error($this->link));
+	if(!$result){
+      	return false;
+      }
+      $row = mysqli_fetch_assoc($result);
+      return $result;
+	}
+	
 }
 // notice there is no closing php delimiter for files that are meant to be embedded STR_TO_DATE('12-01-2014 00:00:00','%m-%d-%Y %H:%i:%s')

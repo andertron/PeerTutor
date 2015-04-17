@@ -46,3 +46,20 @@ Misc:
 [High]more and more validation[] [Deeana/Josh]
 
 [HIGH must do!]Make sure josh didnt break the program [] [Deeana].
+
+
+
+
+
+
+
+
+
+$date = strtotime($clockByID['tutorClockIn']);
+                            $printDate = date("m/d/y", $date);
+                            $intime = strtotime($clockByID['tutorClockIn']);
+				            $printInTime = date("g:i:a", $intime);
+				            $outTime = strtotime($clockByID['tutorClockOut']);
+				            $printOutTime = date("g:i:a", $outTime);
+				            
+				            $hoursWorked = ((strtotime($printOutTime) - strtotime($printInTime)) /3600);
