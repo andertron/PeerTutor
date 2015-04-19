@@ -263,6 +263,7 @@ unset($_SESSION['myusername']);
     include '../includes/_header.php';
    
     echo "<center><h1>You are not a tutor</h1></center>";
+    echo "<center><img src='../images/you_shall_not_pass.jpg' alt='You shall not pass' style='width:304px;height:275px'></center>";
     echo "<center><a href=\"../index.php\">Return Home</a></center>";
     }
     

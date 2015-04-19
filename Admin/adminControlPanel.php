@@ -5,7 +5,6 @@ include( "../DataUtil/DataAccess.inc.php");
 
 $roleID = $_SESSION['role'];
 
-var_dump($roleID);
 
 if($_SESSION[ 'screenName'] && $roleID == "Admin"){ 
 include '../includes/_header.php';
@@ -25,7 +24,16 @@ $tutorByID=$da->get_tutor_by_id($tutorID);
 $tutorClockByID= $da-> get_tutor_clock($tutorID);
 
 
-var_dump($tutorByID);
+
+
+
+}
+
+if(isset($_GET['tutorClockID'])){
+
+// Gets tutor clock ID
+$tutorClockID = $_GET['tutorClockID'];
+
 
 
 }
@@ -50,11 +58,15 @@ if(isset($_POST['btnSubmitEdit'])){
     
 }
 
-//VALIDATION FOR SEARCH CATEGORY
-if(isset($_POST['btnSearch'])){
-$searchCategory = htmlentities($_POST['search']);
-$searchCategories=$da->get_categories_by_categoryName($searchCategory);
-
+if(isset($_POST['btnSubmitEditClock'])){
+    $new_Clock_In = htmlentities($_POST['clockIn']);
+    $new_Clock_Out = htmlentities($_POST['clockOut']);
+    
+    $da->update_tutor_clock($new_Clock_In,$new_Clock_Out, $tutorClockID);
+    ?>
+    
+    <meta http-equiv="refresh" content="0">
+    <?php
 }
     ?>
     <div class="top-title-wrapper">
@@ -104,11 +116,9 @@ $searchCategories=$da->get_categories_by_categoryName($searchCategory);
 
 
             <li class="tab">
-                <a href="#tab4"><i class=icon-arrow-up></i>View Tutees<?php echo $categoryName['category_name'] ?></a>
+                <a href="#tab4"><i class=icon-arrow-up></i>Edit Hours Worked</a>
             </li>
-            <li class="tab">
-                <a href="#tab5"><i class=icon-search></i>Search for tutor</a>
-            </li>
+
 
         </ul>
 
@@ -172,7 +182,7 @@ $searchCategories=$da->get_categories_by_categoryName($searchCategory);
                         <th>Date</th>
                         <th>Tutor In</th>
                         <th>Tutor out</th>
-                        <th>Time Worked</th>
+                    
                       
                         <th></th>
                     </thead>
@@ -186,15 +196,13 @@ $searchCategories=$da->get_categories_by_categoryName($searchCategory);
 				            $printInTime = date("g:i:a", $intime);
 				            $outTime = strtotime($clockByID['tutorClockOut']);
 				            $printOutTime = date("g:i:a", $outTime);
-				            
-				            $hoursWorked = ((strtotime($printOutTime) - strtotime($printInTime)) /3600);
                         echo("<tr>"); 
                         echo("<td>$printDate</td>");
                         echo("<td>$printInTime</td>");
                         echo("<td>$printOutTime</td>");
-                        echo("<td>$hoursWorked");
+                     
                    
-                        echo("<td><a href=\"adminControlPanel.php?TutorID={$getTutors['TutorID']}#tab2\">Select</a>"); 
+                        echo("<td><a href=\"adminControlPanel.php?TutorID={$clockByID['TutorID']}&tutorClockID={$clockByID['tutorClockID']}#tab4\">Edit</a>"); 
                         echo( "</tr>"); 
                         } 
                         ?>
@@ -207,40 +215,29 @@ $searchCategories=$da->get_categories_by_categoryName($searchCategory);
     }
     ?>
             </div>
-            
-            <div id="tab4">
-                <form method="POST" action="">
-                <input type="text" style="width:300px" name="search" placeholder="Search..."value="" required>
-                <input type="submit" name="btnSearch" value="Search">
-             
+             <div id="tab4">
+        <?php
+               if(isset($_GET['tutorClockID'])){
+                   ?>
+                    Format(yyyy/mm/dd) (hh:mm:ss:)
+                    <form method="POST">
+                    Clock In<br><input type="text" name="clockIn" style="width:750px" placeholder="First Name" value="<?php echo $tutorClockByID[0]['tutorClockIn'] ?>" required> <br>
+                    Clock Out<br><input type="text" name="clockOut" style="width:750px" placeholder="Last Name" value="<?php echo $tutorClockByID[0]['tutorClockOut'] ?>" required><br>
+                    
+                    <br>
+                
+                    <br>
+
+                    <input type="submit" name="btnSubmitEditClock" value="Submit">
+                    
+
+
                 </form>
-                
-                
-                <table class ="table">
-                    <thead>
-                        <th>Category name</th>
-                        <th></th>
-                    </thead>
-                    <tbody>
-                        <?php 
-                        
-                        foreach($searchCategories as $catName){ 
-                            
-                        echo("<tr>"); 
-                        echo("<td>{$catName['category_name']}</td>");
-                        echo("<td><a href=\"category-list.php?category_id={$catName['category_id']}\">EDIT</a></td>"); 
-                        echo( "</tr>"); 
-                        } 
-                      
-                        
-                        ?>
-                    </tbody>
-                </table>
-                
-                
-                
-                
+                <?php
+               }
+    ?>
             </div>
+
         </div>
 
     </div>
@@ -249,6 +246,7 @@ $searchCategories=$da->get_categories_by_categoryName($searchCategory);
     }else{
     include '../includes/_header.php'; 
     echo "<center><h1>You are not an admin</h1></center>";
+    echo "<center><img src='../images/you_shall_not_pass.jpg' alt='You shall not pass' style='width:304px;height:275px'></center>";
     echo "<center><a href=\"../index.php\">Return Home</a></center>";
     }
     

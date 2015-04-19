@@ -217,7 +217,7 @@ class DataAccess{
 	}
 	
 	function get_tutor_clock($tutorID){
-		$qStr ="SELECT tutorClockIn, tutorClockOut FROM tblTutorClock WHERE TutorID = '$tutorID'";
+		$qStr ="SELECT tutorClockID, TutorID, tutorClockIn, tutorClockOut FROM tblTutorClock WHERE TutorID = '$tutorID'";
 		$result = mysqli_query($this->link,$qStr) or $this->handle_error(mysqli_error($this->link));
 		$tutors = array();
 		while($row = mysqli_fetch_assoc($result)){
@@ -225,6 +225,12 @@ class DataAccess{
 		}
 		
 		return $tutors;
+	}
+	
+	//Update tutor clock
+	function update_tutor_clock($clockIn, $clockOut, $tutorClockID){
+		$qStr = "UPDATE `tblTutorClock` SET `tutorClockIn`='$clockIn',`tutorClockOut`='$clockOut' WHERE tutorClockID='$tutorClockID'";
+		$result = mysqli_query($this->link, $qStr) or $this->handle_error(mysqli_error($this->link));
 	}
 	
 	//get punch-in table array from database
