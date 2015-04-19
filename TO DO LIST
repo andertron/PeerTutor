@@ -62,4 +62,4 @@ $date = strtotime($clockByID['tutorClockIn']);
 				            $outTime = strtotime($clockByID['tutorClockOut']);
 				            $printOutTime = date("g:i:a", $outTime);
 				            
-				            $hoursWorked = ((strtotime($printOutTime) - strtotime($printInTime)) /3600);
+				            $hoursWorked = ((strtotime($printOutTime) - strtotime($printInTime)) /3600); 
