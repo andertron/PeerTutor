@@ -206,16 +206,17 @@ class DataAccess{
 		return $tutors;
 	}
 	
-	function update_tutor(  $TutorID, $TutorFirstName, $TutorLastName, $TutorEmail, $ClassDescription, $Availability){
-			$qStr = "UPDATE `tblTutors` SET `TutorID`=TutorID,`TutorLastName`='$TutorFirstName',`TutorLastName`='$TutorFirstName',`TutorLastName`='$TutorLastName',`TutorEmail`='$TutorEmail',`ClassDescription`='$ClassDescription',`Availability`='$Availability' WHERE TutorID = '$TutorID'";
+	function update_tutor($TutorID, $TutorFirstName, $TutorLastName, $TutorEmail, $ClassDescription, $Availability){
+			$qStr = "UPDATE `tblTutors` SET `TutorID`=TutorID, `TutorFirstName`='$TutorFirstName', `TutorLastName`='$TutorFirstName', `TutorLastName`='$TutorLastName', `TutorEmail`='$TutorEmail', `ClassDescription`='$ClassDescription', `Availability`='$Availability' WHERE TutorID='$TutorID'";
 			$result = mysqli_query($this->link, $qStr) or $this->handle_error(mysqli_error($this->link));
-			$posts = array();
-			while($row = mysqli_fetch_assoc($result)){
-			$posts[] =$row;
-			}
-			return $posts;
+	if(!$result){
+      	return false;
+      }
+      $row = mysqli_fetch_assoc($result);
+      return $result;
 	}
 	
+
 	function get_tutor_clock($tutorID){
 		$qStr ="SELECT tutorClockID, TutorID, tutorClockIn, tutorClockOut FROM tblTutorClock WHERE TutorID = '$tutorID'";
 		$result = mysqli_query($this->link,$qStr) or $this->handle_error(mysqli_error($this->link));
@@ -231,6 +232,30 @@ class DataAccess{
 	function update_tutor_clock($clockIn, $clockOut, $tutorClockID){
 		$qStr = "UPDATE `tblTutorClock` SET `tutorClockIn`='$clockIn',`tutorClockOut`='$clockOut' WHERE tutorClockID='$tutorClockID'";
 		$result = mysqli_query($this->link, $qStr) or $this->handle_error(mysqli_error($this->link));
+	}
+	
+	function insert_new_tutor_clock($tutorID, $tutorClockIn, $tutorClockOut){
+	$qStr = "INSERT INTO tblTutorClock(TutorID, tutorClockIn, tutorClockOut) VALUES('$tutorID', STR_TO_DATE( '$tutorClockIn', '%Y-%m-%d %H:%i:%s' ), STR_TO_DATE( '$tutorClockOut', '%Y-%m-%d %H:%i:%s'))";
+	$result = mysqli_query($this->link, $qStr) or $this->handle_error(mysqli_error($this->link));
+	return $result;
+	}
+	
+	//Insert new tutor
+	function insert_tutor($tutorID, $firstName, $lastName, $email, $description, $availability, $password){
+	$qStr = "INSERT INTO tblTutors(TutorID, TutorFirstName, TutorLastName, TutorEmail, ClassDescription, Availability, RoleID, TutorPassword) VALUES('$tutorID', '$firstName', '$lastName', '$email', '$description', '$availability', 2, MD5('$password'))";
+	$result = mysqli_query($this->link, $qStr) or $this->handle_error(mysqli_error($this->link));
+	return $result;
+	}
+	
+	function get_tutee($tutorID){
+		$qStr ="SELECT * FROM tblStudentClock WHERE TutorID = '$tutorID'";
+		$result = mysqli_query($this->link,$qStr) or $this->handle_error(mysqli_error($this->link));
+		$tutors = array();
+		while($row = mysqli_fetch_assoc($result)){
+			$tutors[] =$row;
+		}
+		
+		return $tutors;
 	}
 	
 	//get punch-in table array from database
@@ -256,15 +281,15 @@ class DataAccess{
 		return $tutorTable;
 	}
 	//insert for student punch-in table
-	function insert_punch_table_data($studID, $studFirstName, $studLastName, $studClockIn, $tutorID){
-	$qStr = "INSERT INTO tblStudentClock(studClockID, studFirstName, studLastName, studClockIn, studClockOut, TutorID) VALUES('$studID', '$studFirstName', '$studLastName', STR_TO_DATE( '$studClockIn', '%Y-%m-%d %H:%i:%s' ), NULL, $tutorID)";
+	function insert_punch_table_data($studID, $studFirstName, $studLastName, $studClockIn, $tutorID, $tutorClockID){
+	$qStr = "INSERT INTO tblStudentClock(studClockID, studFirstName, studLastName, studClockIn, studClockOut, TutorID, tutorClockID) VALUES('$studID', '$studFirstName', '$studLastName', STR_TO_DATE( '$studClockIn', '%Y-%m-%d %H:%i:%s' ), NULL, $tutorID, $tutorClockID)";
 	$result = mysqli_query($this->link, $qStr) or $this->handle_error(mysqli_error($this->link));
 	return $result;
 	}
 	
 	//update for student punch table
-	function update_punch_table_data($studClockOut, $studID){
-		$qStr = "UPDATE tblStudentClock SET studClockOut='$studClockOut' WHERE studClockID=$studID";
+	function update_punch_table_data($studClockOut, $studID, $tutorClockID){
+		$qStr = "UPDATE tblStudentClock SET studClockOut='$studClockOut' WHERE studClockID=$studID && tutorClockID=$tutorClockID";
 		$result = mysqli_query($this->link, $qStr) or $this->handle_error(mysqli_error($this->link));
 	if(!$result){
       	return false;
@@ -273,16 +298,16 @@ class DataAccess{
       return $result;
 	}
 	
-		//insert tutor punch tabe
+		//insert tutor punch table
 	function insert_tutor_punch_data($tutorID, $tutorClockIn){
 	$qStr = "INSERT INTO tblTutorClock(TutorID, tutorClockIn, tutorClockOut) VALUES('$tutorID', STR_TO_DATE( '$tutorClockIn', '%Y-%m-%d %H:%i:%s' ), NULL)";
 	$result = mysqli_query($this->link, $qStr) or $this->handle_error(mysqli_error($this->link));
 	return $result;
 	}
 	
-	//update for student punch table
-	function update_tutor_punch_data($tutorClockOut, $tutorID){
-		$qStr = "UPDATE tblTutorClock SET tutorClockOut='$tutorClockOut' WHERE TutorID=$tutorID";
+	//update for tutor punch table
+	function update_tutor_punch_data($tutorClockOut, $tutorID, $tutorClockID){
+		$qStr = "UPDATE tblTutorClock SET tutorClockOut='$tutorClockOut' WHERE TutorID=$tutorID && tutorClockID=$tutorClockID ";
 		$result = mysqli_query($this->link, $qStr) or $this->handle_error(mysqli_error($this->link));
 	if(!$result){
       	return false;

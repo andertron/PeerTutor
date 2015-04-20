@@ -107,11 +107,9 @@
                                     <div class="content-box-text">
                                        If you are a tutor you can use the Log in page in the top right corner<br />After Logging in:<br />
                 <ul>
-                    <li>You can use the Clock In and Clock Out functions</li>
-                    <li>You can add information about students you tutored</li>
-                    <li>You can change your availability</li>
-                    <li>You can change their description</li>
-                    <li>You can edit your daily notification</li>
+                    <li>You can use the Clock In and Clock Out functions to keep track of your tutoring hours</li>
+                    <li>You can use the Clock In and Clock Out functions to keep track of your tutees hours</li>
+                   
                 </ul>
 
                                     </div>

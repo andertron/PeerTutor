@@ -4,10 +4,10 @@ include( "../DataUtil/common.inc.php");
 include '../DataUtil/DataAccess.inc.php';
 
 $roleID = $_SESSION['type'];
-var_dump($roleID);
+
 $roleID = $_SESSION['role'];
 
-var_dump($roleID);
+
 
 if($_SESSION[ 'screenName'] && $roleID == "Tutor"){ 
 include '../includes/_header.php';
@@ -26,6 +26,21 @@ $time_in = "";
 $time_out = "";
 $tut_time_in = "";
 $tut_time_out = "";
+$current_time = date('Y-m-d');
+$current_clock_id = "";
+
+
+$toEnd = count($tutorPunchTable);
+foreach($tutorPunchTable as $punch) {
+  if (0 === --$toEnd) {
+      $current_clock_id = $punch['tutorClockID'];
+    //echo($current_clock_id);
+  }
+}
+
+
+
+
 
 if(isset($_POST['btnTutClockIn'])){
 $tut_time_in = date('Y-m-d H:i:s');
@@ -38,9 +53,9 @@ $da->insert_tutor_punch_data($tutorID, $tut_time_in);
 
 }
 if(isset($_POST['btnTutClockOut'])){
-    
+
      $tut_time_out = date('Y-m-d H:i:s');  
-    $da->update_tutor_punch_data($tut_time_out, $tutorID);
+    $da->update_tutor_punch_data($tut_time_out, $tutorID, $current_clock_id);
     ?>
      <meta http-equiv="refresh" content="0">
      <?php
@@ -76,7 +91,7 @@ $error_messages = array();
      
       
   if(empty($error_messages)){
-    $da->insert_punch_table_data($studID, $studFirstName, $studLastName, $time_in, $tutorID);
+    $da->insert_punch_table_data($studID, $studFirstName, $studLastName, $time_in, $tutorID, $current_clock_id);
     ?>
      <meta http-equiv="refresh" content="0">
      <?php
@@ -100,7 +115,7 @@ $error_messages = array();
 }
   if(empty($error_messages)){
      
-    $da->update_punch_table_data($time_out, $studID);
+    $da->update_punch_table_data($time_out, $studID, $current_clock_id);
     ?>
      <meta http-equiv="refresh" content="0">
      <?php
@@ -169,8 +184,21 @@ $error_messages = array();
                                 <div class="space-sep20"></div>
                             </div>            
                         </div>
+                        <div class="tab-container">
+        <ul class="etabs">
 
-                        <div class="row">
+            <li class="tab">
+                <a href="#tab1"><i class=icon-list></i>Clock In/Out</a>
+            </li>
+            
+            <li class="tab">
+                <a href="#tab2"><i class=icon-file-add></i>View past hours</a>
+            </li>
+
+        </ul>
+         <div class="tabs-content">
+                <div id="tab1">
+                  
                             
                             <?php
                             if(isset($tut_error_messages['tutorID'])){
@@ -179,6 +207,7 @@ $error_messages = array();
                             ?>
                             <Table class="table"border = "1">
                                 <thead>
+                                 
                                 <th>Tutor ID</th>
                                 <th></th>
                                 <th></th>
@@ -189,12 +218,37 @@ $error_messages = array();
                                 <tbody>
                                     <tr>
                                     <td><input type="text" name="tutorID"/ readonly value="<?php echo ($tutorID) ?>"/></td>
-                                    <td><input type = "submit" name = "btnTutClockIn" value = "Clock In"></td>
+                                <?php 
+                                $toEnd = count($tutorPunchTable);
+                                foreach($tutorPunchTable as $punch) {
+                                if (0 === --$toEnd) {
+                                $current_clock_in = $punch['tutorClockIn'];
+                                $current_clock_out = $punch['tutorClockOut'];
+                                //echo($current_clock_id);
+                                 }
+                                }                                
+                                if($current_clock_in != null && $current_clock_out != null){
+                                     echo("<td><input type = 'submit' name = 'btnTutClockIn' value='Clock In'></td>");
+                                }elseif($current_clock_out = null && $current_clock_in != null){
+                                    echo("<td></td>");
+                                    
+                                }else{
+                                  echo("<td></td>");  
+                                }
+    
+                                    ?>
                                     <td><input type = "submit" name = "btnTutClockOut" value="Clock Out"></td>
                                     </tr>
                                     </form>
                                     <?php
                                     foreach($tutorPunchTable as $tutPunch){
+                                        
+                                        $clock_in = date('Y-m-d', strtotime($tutPunch['tutorClockIn']));
+                                        //$clock_out = date('Y-m-d');
+                                    
+                                      //echo($clock_out);
+                                        if($current_time == $clock_in){
+                                        
                                         echo("<tr>");
                                         echo("<td></td>");
                                         echo("<td>{$tutPunch['tutorClockIn']}</td>");
@@ -205,6 +259,7 @@ $error_messages = array();
                                         }
                                         echo("</tr>");
                                     }
+                                    }
                                     ?>
                                 </tbody>
                                 
@@ -214,6 +269,7 @@ $error_messages = array();
                            <table class="table" id="studTable" border="1">
 
                                  <thead>
+                                  
                                 <th>Student ID</th>
                                 <th>Student First Name</th>
                                 <th>Student Last Name</th>
@@ -232,7 +288,9 @@ $error_messages = array();
                                 </form>
                                   <tbody>
                                     <?php
+                                   
                                         foreach($punchTable as $punch){
+                                            if($current_clock_id == $punch['tutorClockID']){
                                             echo("<tr>");
                                             echo("<td>{$punch['studClockID']}</td>");
                                             echo("<td>{$punch['studFirstName']}</td>");
@@ -245,6 +303,7 @@ $error_messages = array();
                                             }
                                              echo("</tr>");
                                         }
+                                        }
                                     ?>
                                 </tbody>
                                  
@@ -254,7 +313,55 @@ $error_messages = array();
                             
 
                             
-            </div><!--.content-wrapper end -->
+          
+                </div>
+                
+                <div id="tab2">
+                    
+                     <Table class="table"border = "1">
+                                <thead>
+                                <th>Tutor ID</th>
+                                <th></th>
+                                <th></th>
+                                </thead>
+
+                                <tbody>
+                                <?php echo("<td>{$tutorID}</td>"); ?>
+                                    <?php
+                                    foreach($tutorPunchTable as $tutPunch){
+  
+                                        echo("<tr>");
+                                        echo("<td></td>");
+                                        echo("<td>{$tutPunch['tutorClockIn']}</td>");
+                                        echo("<td>{$tutPunch['tutorClockOut']}</td>");
+                                        echo("</tr>");
+                                        $clock_In = date('H:i:s', strtotime($tutPunch['tutorClockIn']));
+                                        $clock_Out = date('H:i:s', strtotime($tutPunch['tutorClockOut']));
+                                        $total = date_diff($clock_Out, $clock_In);
+                                        $total += $total;
+                                  }
+                                    ?>
+                                    <tr>
+                                    <td>Total Hours:</td>
+                                    <?php echo("<td>{$total}</td>");?>
+                                    </tr>
+                                </tbody>
+                                
+                              </Table>   
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    </div>
+             </div>
+             
+
+                        
             </html>
             
 <?php

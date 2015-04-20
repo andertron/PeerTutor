@@ -22,11 +22,20 @@ $tutorID = $_GET['TutorID'];
 $tutorByID=$da->get_tutor_by_id($tutorID);
 //Grab tutor clock
 $tutorClockByID= $da-> get_tutor_clock($tutorID);
+//Grab tutees 
+$getTutees = $da->get_tutee($tutorID);
 
+}
 
-
-
-
+if(isset($_POST['btnSubmitAddClock'])){
+    $newTutorClockIn = htmlentities($_POST['addClockIn']);
+    $newTutorClockOut = htmlentities($_POST['addClockOut']);
+    
+    $da->insert_new_tutor_clock($tutorID,$newTutorClockIn,$newTutorClockOut);
+     ?>
+  
+        <meta http-equiv="refresh" content="0">
+      <?php
 }
 
 if(isset($_GET['tutorClockID'])){
@@ -36,6 +45,23 @@ $tutorClockID = $_GET['tutorClockID'];
 
 
 
+}
+if(isset($_POST['btnSubmitAdd'])){
+    $str = htmlentities($_POST['addTutorID']);
+    $add_tutor_id = (int)$str;
+    $add_first_name = htmlentities($_POST['addFirstName']);
+    $add_last_name = htmlentities($_POST['addLastName']);
+    $add_email = htmlentities($_POST['addEmail']);
+    $add_description = htmlentities($_POST['addClassTutored']);
+    $add_Availability = htmlentities($_POST['addAvailability']);
+    $add_password = htmlentities($_POST['addPassword']);
+    
+    $da->insert_tutor($add_tutor_id, $add_first_name, $add_last_name, $add_email, $add_description, $add_Availability, $add_password);
+    
+    ?>
+  
+        <meta http-equiv="refresh" content="0">
+      <?php
 }
 
 //Validations for editing a tutor
@@ -69,6 +95,16 @@ if(isset($_POST['btnSubmitEditClock'])){
     <?php
 }
     ?>
+    
+     
+<link rel="stylesheet" type="text/css" href="../css/jquery.datetimepicker.css"/ >
+<script type="text/javascript" scr="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/jquery.datetimepicker.js"></script>
+<script>
+jQuery('#datetimepicker').datetimepicker();
+</script>
+
+    
     <div class="top-title-wrapper">
                     <div class="container">
                         <div class="row">
@@ -118,6 +154,10 @@ if(isset($_POST['btnSubmitEditClock'])){
             <li class="tab">
                 <a href="#tab4"><i class=icon-arrow-up></i>Edit Hours Worked</a>
             </li>
+            <li class="tab">
+                <a href="#tab5"><i class=icon-arrow-up></i>View Tutees</a>
+            </li>
+         
 
 
         </ul>
@@ -148,6 +188,22 @@ if(isset($_POST['btnSubmitEditClock'])){
                         ?>
                     </tbody>
                 </table>
+                <form method="POST">
+                    Tutor ID<br><input type="text" name="addTutorID" style="width:750px" placeholder="Tutor ID" value="" required> <br>
+                    First Name<br><input type="text" name="addFirstName" style="width:750px" placeholder="First Name" value="" required> <br>
+                    Last Name<br><input type="text" name="addLastName" style="width:750px" placeholder="Last Name" value="" required><br>
+                    Email<br><input type="email" name="addEmail" style="width:750px" placeholder="Email" value="" required><br>
+                    Class Tutored<br><textarea name="addClassTutored" cols = "50" rows = "4" style="width:750px" placeholder="Class Tutored" value="" ></textarea><br>
+                    Availability<br><textarea name="addAvailability" cols = "50" rows = "4" style="width:750px" placeholder="Availability" value=""></textarea><br>
+                    Password<br><input type="password" name="addPassword" style="width:750px" placeholder="password" value="" required><br>
+                    <br>
+                
+                    <br>
+
+                    <input type="submit" name="btnSubmitAdd" value="Submit">
+
+
+                </form>
             </div>
             <div id="tab2">
                 <?php
@@ -170,6 +226,8 @@ if(isset($_POST['btnSubmitEditClock'])){
 
                 </form>
                 <?php
+                }else{
+                    echo "Please select a tutor.";
                 }
                 ?>
             </div>
@@ -208,10 +266,32 @@ if(isset($_POST['btnSubmitEditClock'])){
                         ?>
                     </tbody>
                 </table>
+                <h1>Add New Clock In/Out Time:</h1>
+                 <?php
+               if(isset($_GET['TutorID'])){
+                   ?>
+                    Format: yyyy-mm-dd hh:mm:ss:
+                    
+                    <form method="POST">
+                    Clock In<br><input type="text" name="addClockIn" style="width:750px" placeholder="Click In" value="" required> <br>
+                    Clock Out<br><input type="datetime" name="addClockOut" style="width:750px" placeholder="Clock Out" value="" required><br>
+                    
+                    <br>
+                
+                    <br>
+
+                    <input type="submit" name="btnSubmitAddClock" value="Submit">
+                    
+                </form>
+                  <?php
+               }
+               ?>
                 
         <?php
-      echo $_GET['category_id'];
+     
 
+    }else{
+        echo "Please select a tutor.";
     }
     ?>
             </div>
@@ -219,7 +299,7 @@ if(isset($_POST['btnSubmitEditClock'])){
         <?php
                if(isset($_GET['tutorClockID'])){
                    ?>
-                    Format(yyyy/mm/dd) (hh:mm:ss:)
+                    Format yyyy/mm/dd hh:mm:ss:
                     <form method="POST">
                     Clock In<br><input type="text" name="clockIn" style="width:750px" placeholder="First Name" value="<?php echo $tutorClockByID[0]['tutorClockIn'] ?>" required> <br>
                     Clock Out<br><input type="text" name="clockOut" style="width:750px" placeholder="Last Name" value="<?php echo $tutorClockByID[0]['tutorClockOut'] ?>" required><br>
@@ -234,8 +314,46 @@ if(isset($_POST['btnSubmitEditClock'])){
 
                 </form>
                 <?php
+               }else{
+                   echo 'Please slect a time to edit.';
                }
     ?>
+            </div>
+            <div id="tab5">
+                <table class = "table">
+                    <thead>
+                        <th>Studdent ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Date</th>
+                        <th>Clock In</th>
+                        <th>Clock Out</th>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        
+                        foreach($getTutees as $tutees){ 
+                            $date = strtotime($tutees['studClockIn']);
+                            $printDate = date("m/d/y", $date);
+                            $intime = strtotime($tutees['studClockIn']);
+				            $printInTime = date("g:i:a", $intime);
+				            $outTime = strtotime($tutees['studClockOut']);
+				            $printOutTime = date("g:i:a", $outTime);
+				            
+                        echo("<tr>"); 
+                        echo("<td>{$tutees['studClockID']}</td>");
+                        echo("<td>{$tutees['studFirstName']}</td>");
+                        echo("<td>{$tutees['studLastName']}</td>");
+                        echo("<td>$printDate</td>");
+                        echo("<td>$printInTime</td>");
+                        echo("<td>$printOutTime</td>");
+                        echo( "</tr>"); 
+                        } 
+                        ?>
+                    </tbody>
+                </table>
+          
+
             </div>
 
         </div>
