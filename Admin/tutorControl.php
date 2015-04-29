@@ -341,10 +341,7 @@ $error_messages = array();
                                         $total += $total;
                                   }
                                     ?>
-                                    <tr>
-                                    <td>Total Hours:</td>
-                                    <?php echo("<td>{$total}</td>");?>
-                                    </tr>
+                                    
                                 </tbody>
                                 
                               </Table>   
